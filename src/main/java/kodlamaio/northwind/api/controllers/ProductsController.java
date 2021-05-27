@@ -1,11 +1,11 @@
 package kodlamaio.northwind.api.controllers;
 
 import kodlamaio.northwind.business.abstracts.ProductService;
+import kodlamaio.northwind.core.utilities.results.DataResult;
+import kodlamaio.northwind.core.utilities.results.Result;
 import kodlamaio.northwind.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,10 +22,30 @@ public class ProductsController {
 
     //Dış dünya ile iletişim kurulan yer tam olarak burası
     @GetMapping("/getall") // /api/products/getall dersem burası çalışır
-    public List<Product> getAll(){
+    public DataResult<List<Product>> getAll(){
         return this.productService.getAll();
     };
+    @PostMapping("/addProduct")
+    public Result add(@RequestBody  Product product){ //gelen requestin bodysindeki parametreyi al
+        return this.productService.add(product);
+    }
+
+    @GetMapping("/getByProductName")
+    public DataResult<Product> getByProductName(@RequestParam String productName){
+        return this.productService.getByProductName(productName);
+    }
+    @GetMapping("/getByProductNameOrCategory")
+    public DataResult<List<Product>> getByProductNameOrCategory(@RequestParam String productName,  @RequestParam int categoryId){
+        return this.productService.getByProductNameOrCategory(productName,categoryId);
+    }
+
+    @GetMapping("/getAllPageable")
+    public DataResult<List<Product>> getAll(@RequestParam int pageNo, @RequestParam int pageSize){
+        return this.productService.getAll(pageNo,pageSize);
+    }
+
+    @GetMapping("/getAllSorted")
+    public DataResult<List<Product>> getAllSorted(){
+        return this.productService.getAllSorted();
+    }
 }
-
-
-//kodlama.io -> domain denir    /api/products  bu adres üzerinden gelirse burası karşılasın
